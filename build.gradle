@@ -14,3 +14,6 @@ dependencies {
     compile group: 'org.seleniumhq.selenium', name: 'selenium-java', version: '4.0.0-alpha-6'
     compile group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.29'
 }
+test {
+    systemProperty "file.encoding", "utf-8"
+}

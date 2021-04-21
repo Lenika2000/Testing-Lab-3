@@ -18,7 +18,7 @@ import static org.junit.Assert.assertThat;
 
 public class PasswordForFileTest {
     private static WebDriver driver;
-    private static Init init = new Init();
+    private static final Init init = new Init();
     private static JavascriptExecutor jse;
 
     @BeforeClass
@@ -28,7 +28,7 @@ public class PasswordForFileTest {
         init.login();
         driver.get("https://dfiles.eu/");
         // переход на страницу Мои файлы
-        driver.findElement(By.xpath("//div[@id=\'main\']/div/ul/li[2]/a")).click();
+        driver.findElement(By.xpath("//div[@id='main']/div/ul/li[2]/a")).click();
     }
 
     @AfterClass
@@ -67,6 +67,8 @@ public class PasswordForFileTest {
         // Переход на скачивание файла
         WebElement download = driver.findElement(By.xpath("//*[@id=\"tbl_filelist\"]/tbody/tr[1]/td[2]/div/span/a"));
         jse.executeScript("arguments[0].click()", download);
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(100));
+        wait.until(ExpectedConditions.textToBePresentInElement(driver.findElement(By.xpath("//*[@id=\"main\"]/div[4]/div/div[4]/form/div/p/strong")), "Пожалуйста, введите пароль для этого файла:"));
 
         assertThat(driver.findElement(By.xpath("//*[@id=\"main\"]/div[4]/div/div[4]/form/div/p/strong")).getText(), is("Пожалуйста, введите пароль для этого файла:"));
     }

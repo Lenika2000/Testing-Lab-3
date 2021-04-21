@@ -18,7 +18,7 @@ import static org.junit.Assert.assertTrue;
 
 public class FileTests {
     private static WebDriver driver;
-    private static Init init = new Init();
+    private static final Init init = new Init();
     private static JavascriptExecutor jse;
 
     @BeforeClass
@@ -32,7 +32,7 @@ public class FileTests {
     @Before
     public void setMyFilesFolder() {
         // переход на страницу Мои файлы
-        driver.findElement(By.xpath("//div[@id=\'main\']/div/ul/li[2]/a")).click();
+        driver.findElement(By.xpath("//div[@id='main']/div/ul/li[2]/a")).click();
         waitUntilNotificationDisappears();
     }
 
@@ -101,6 +101,7 @@ public class FileTests {
         WebElement showPropertiesBtn = driver.findElement(By.xpath("//*[@id=\"df_share\"]/div[2]/div[1]/a[10]"));
         jse.executeScript("arguments[0].click()", showPropertiesBtn);
         assertThat(driver.findElement(By.xpath("//*[@id=\"depositbox\"]/div[1]/div[1]/span")).getText(), is("Свойства файла"));
+        driver.findElement(By.xpath("//*[@id=\"depositbox\"]/div[1]/div[2]/div/div[7]")).click();
     }
 
     @Test

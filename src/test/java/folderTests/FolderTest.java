@@ -29,7 +29,7 @@ import java.net.URL;
 
 public class FolderTest {
     private static WebDriver driver;
-    private static Init init = new Init();
+    private static final Init init = new Init();
     private static JavascriptExecutor jse;
 
     @BeforeClass
@@ -39,7 +39,12 @@ public class FolderTest {
         init.login();
         driver.get("https://dfiles.eu/");
         // переход на страницу Мои файлы
-        driver.findElement(By.xpath("//div[@id=\'main\']/div/ul/li[2]/a")).click();
+        driver.findElement(By.xpath("//div[@id='main']/div/ul/li[2]/a")).click();
+    }
+
+    public void waitUntilNotificationDisappears() {
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
+        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("//*[@id=\"ajaxStatus\"]")));
     }
 
     @AfterClass
@@ -50,18 +55,18 @@ public class FolderTest {
     @Test
     public void addFolderTest() {
         // Клик Создать
-        WebElement newFolderBtn = driver.findElement(By.xpath("//div[@id=\'df_share\']/div/div/a/span"));
+        WebElement newFolderBtn = driver.findElement(By.xpath("//div[@id='df_share']/div/div/a/span"));
         jse.executeScript("arguments[0].click()", newFolderBtn);
         // Вводим название папки
         driver.findElement(By.xpath("//*[@id=\"depositbox\"]/div[1]/div[2]/div/input")).click();
-        driver.findElement(By.xpath("//*[@id=\"depositbox\"]/div[1]/div[2]/div/input")).sendKeys(init.getProperty("newFolderName"));
+        driver.findElement(By.xpath("//*[@id=\"depositbox\"]/div[1]/div[2]/div/input")).sendKeys(init.getProperty("folderName"));
         // Клик Готово
-        WebElement createBtn = driver.findElement(By.xpath("//div[@id=\'depositbox\']/div/div[2]/div/div"));
+        WebElement createBtn = driver.findElement(By.xpath("//div[@id='depositbox']/div/div[2]/div/div"));
         jse.executeScript("arguments[0].click()", createBtn);
 
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
-        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("//div[@id=\'depositbox\']/div/div[2]/div/div")));
-
+//        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
+//        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("//div[@id=\'depositbox\']/div/div[2]/div/div")));
+        waitUntilNotificationDisappears();
         List<WebElement> allElements = driver.findElements(By.xpath("//*[@id=\"df_share\"]/div[1]/ul/li[2]/ul/li"));
         boolean result = allElements.stream().anyMatch(folder -> folder.getText().contains(init.getProperty("folderName")));
         assertTrue(result);
@@ -90,9 +95,9 @@ public class FolderTest {
         WebElement renameBtn = driver.findElement(By.xpath("//*[@id=\"depositbox\"]/div[1]/div[2]/div/div"));
         jse.executeScript("arguments[0].click()", renameBtn);
 
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
-        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("//*[@id=\"depositbox\"]/div[1]/div[2]/div/div")));
-
+//        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
+//        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("//*[@id=\"depositbox\"]/div[1]/div[2]/div/div")));
+        waitUntilNotificationDisappears();
         List<WebElement> allElements = driver.findElements(By.xpath("//*[@id=\"df_share\"]/div[1]/ul/li[2]/ul/li"));
         boolean result = allElements.stream().anyMatch(folder -> folder.getText().contains(init.getProperty("newFolderName")));
         assertTrue(result);
