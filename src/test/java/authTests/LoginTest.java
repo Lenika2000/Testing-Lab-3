@@ -40,11 +40,9 @@ public class LoginTest {
         init.login();
         assertThat(driver.findElement(By.xpath("//div[@id='main']/div/div[2]/a[2]/strong")).getText(), is("lena"));
         driver.findElement(By.xpath("//div[@id='main']/div/div[2]/a[2]")).click();
-        {
-            WebElement element = driver.findElement(By.xpath("//a[contains(text(),'Выход')]"));
-            JavascriptExecutor jse = (JavascriptExecutor) driver;
-            jse.executeScript("arguments[0].click()", element);
-        }
+        WebElement element = driver.findElement(By.xpath("//a[contains(text(),'Выход')]"));
+        JavascriptExecutor jse = (JavascriptExecutor) driver;
+        jse.executeScript("arguments[0].click()", element);
     }
 
     @Test
@@ -60,7 +58,6 @@ public class LoginTest {
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(100));
         wait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("//*[@id=\"rc-anchor-container\"]/div[3]")));
         driver.findElement(By.xpath("//input[@id='login_btn']")).click();
-//        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
         wait.until(ExpectedConditions.textToBePresentInElement(driver.findElement(By.xpath("//form[@id=\"login_frm\"]/table/tbody/tr[3]/td/div")), "Неверный логин или пароль"));
         driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
         assertThat(driver.findElement(By.xpath("//form[@id=\"login_frm\"]/table/tbody/tr[3]/td/div")).getText(), is("Неверный логин или пароль"));

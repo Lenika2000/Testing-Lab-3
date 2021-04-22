@@ -1,31 +1,17 @@
 package folderTests;
 
-import org.junit.*;
-
-import static org.junit.Assert.*;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.core.IsNot.not;
-
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.remote.RemoteWebDriver;
-import org.openqa.selenium.remote.DesiredCapabilities;
-import org.openqa.selenium.Dimension;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
+import org.junit.Test;
+import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.Alert;
-import org.openqa.selenium.Keys;
 import util.Init;
 
 import java.time.Duration;
-import java.util.*;
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.util.List;
+
+import static org.junit.Assert.assertTrue;
 
 public class FolderTest {
     private static WebDriver driver;
@@ -55,17 +41,13 @@ public class FolderTest {
     @Test
     public void addFolderTest() {
         // Клик Создать
-        WebElement newFolderBtn = driver.findElement(By.xpath("//div[@id='df_share']/div/div/a/span"));
-        jse.executeScript("arguments[0].click()", newFolderBtn);
+        driver.findElement(By.xpath("//div[@id='df_share']/div/div/a/span")).click();
         // Вводим название папки
         driver.findElement(By.xpath("//*[@id=\"depositbox\"]/div[1]/div[2]/div/input")).click();
         driver.findElement(By.xpath("//*[@id=\"depositbox\"]/div[1]/div[2]/div/input")).sendKeys(init.getProperty("folderName"));
         // Клик Готово
-        WebElement createBtn = driver.findElement(By.xpath("//div[@id='depositbox']/div/div[2]/div/div"));
-        jse.executeScript("arguments[0].click()", createBtn);
+        driver.findElement(By.xpath("//div[@id='depositbox']/div/div[2]/div/div")).click();
 
-//        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
-//        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("//div[@id=\'depositbox\']/div/div[2]/div/div")));
         waitUntilNotificationDisappears();
         List<WebElement> allElements = driver.findElements(By.xpath("//*[@id=\"df_share\"]/div[1]/ul/li[2]/ul/li"));
         boolean result = allElements.stream().anyMatch(folder -> folder.getText().contains(init.getProperty("folderName")));
@@ -77,14 +59,12 @@ public class FolderTest {
         // Открыть список папок
         WebElement myFileGroups = driver.findElement(By.xpath("//*[@id=\"df_share\"]/div[1]/ul/li[2]"));
         if (myFileGroups.getAttribute("class").contains("collapsed")) {
-            jse.executeScript("arguments[0].click()", myFileGroups);
+            myFileGroups.click();
         }
         // Клик Выбрать папку
-        WebElement selectedFolder = driver.findElement(By.xpath("//*[@id=\"df_share\"]/div[1]/ul/li[2]/ul/li[1]/a"));
-        jse.executeScript("arguments[0].click()", selectedFolder);
+        driver.findElement(By.xpath("//*[@id=\"df_share\"]/div[1]/ul/li[2]/ul/li[1]/a")).click();
         // Клик Переименовать
-        WebElement renameFolderBtn = driver.findElement(By.xpath("//*[@id=\"df_share\"]/div[1]/div[1]/a[3]"));
-        jse.executeScript("arguments[0].click()", renameFolderBtn);
+        driver.findElement(By.xpath("//*[@id=\"df_share\"]/div[1]/div[1]/a[3]")).click();
         // Очистили поле
         WebElement renameInput = driver.findElement(By.xpath("//*[@id=\"depositbox\"]/div[1]/div[2]/div/input"));
         renameInput.sendKeys(Keys.CONTROL + "a");
@@ -92,11 +72,8 @@ public class FolderTest {
         renameInput.sendKeys(init.getProperty("newFolderName"));
 
         // Клик Готово
-        WebElement renameBtn = driver.findElement(By.xpath("//*[@id=\"depositbox\"]/div[1]/div[2]/div/div"));
-        jse.executeScript("arguments[0].click()", renameBtn);
+        driver.findElement(By.xpath("//*[@id=\"depositbox\"]/div[1]/div[2]/div/div")).click();
 
-//        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
-//        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("//*[@id=\"depositbox\"]/div[1]/div[2]/div/div")));
         waitUntilNotificationDisappears();
         List<WebElement> allElements = driver.findElements(By.xpath("//*[@id=\"df_share\"]/div[1]/ul/li[2]/ul/li"));
         boolean result = allElements.stream().anyMatch(folder -> folder.getText().contains(init.getProperty("newFolderName")));

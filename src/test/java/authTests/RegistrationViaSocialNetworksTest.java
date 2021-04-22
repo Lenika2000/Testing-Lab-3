@@ -1,30 +1,32 @@
 package authTests;
 
-import org.junit.Test;
-import org.junit.Before;
 import org.junit.After;
-
-import static org.hamcrest.CoreMatchers.anyOf;
-import static org.junit.Assert.*;
-import static org.hamcrest.CoreMatchers.is;
-
+import org.junit.Before;
+import org.junit.Test;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.JavascriptExecutor;
 import util.Init;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+
+import static org.hamcrest.CoreMatchers.anyOf;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 
 public class RegistrationViaSocialNetworksTest {
     private WebDriver driver;
-    private Map<String, Object> vars = new HashMap<>();
+    private final Map<String, Object> vars = new HashMap<>();
 
     @Before
     public void setUp() {
         driver = (new Init()).initWebDriver();
-        driver.findElement(By.xpath("//a[contains(text(),\'Зарегистрируйтесь сейчас!\')]")).click();
-        driver.findElement(By.xpath("//input[@id=\'i_undertake_conditions\']")).click();
+        driver.findElement(By.xpath("//a[contains(text(),'Зарегистрируйтесь сейчас!')]")).click();
+        driver.findElement(By.xpath("//input[@id='i_undertake_conditions']")).click();
     }
 
     @After
@@ -51,27 +53,27 @@ public class RegistrationViaSocialNetworksTest {
     public void testFb() {
         // получаем уникальный идентификаторы открытых окон
         vars.put("window_handles", driver.getWindowHandles());
-        WebElement facebook = driver.findElement(By.xpath("//a[contains(@class, \'button-facebook\')]"));
+        WebElement facebook = driver.findElement(By.xpath("//a[contains(@class, 'button-facebook')]"));
         ((JavascriptExecutor)driver).executeScript("arguments[0].click();", facebook);
         changeWindow(2000);
-        assertThat(driver.findElement(By.xpath("//div[@id=\'header_block\']/span/div")).getText(), anyOf(is("Вход на Facebook"), is("Log in to Facebook")) );
+        assertThat(driver.findElement(By.xpath("//div[@id='header_block']/span/div")).getText(), anyOf(is("Вход на Facebook"), is("Log in to Facebook")) );
     }
 
     @Test
     public void testTwitter() {
         // получаем уникальный идентификаторы открытых окон
         vars.put("window_handles", driver.getWindowHandles());
-        WebElement twitter = driver.findElement(By.xpath("//a[contains(@class, \'button-twitter\')]"));
+        WebElement twitter = driver.findElement(By.xpath("//a[contains(@class, 'button-twitter')]"));
         ((JavascriptExecutor)driver).executeScript("arguments[0].click();", twitter);
         changeWindow(2000);
-        assertThat(driver.findElement(By.xpath("//div[@id=\'bd\']/div/h2")).getText(), anyOf(is("Authorize Depositfiles to access your account?"), is("Разрешить приложению Depositfiles доступ к вашей учетной записи?")) );
+        assertThat(driver.findElement(By.xpath("//div[@id='bd']/div/h2")).getText(), anyOf(is("Authorize Depositfiles to access your account?"), is("Разрешить приложению Depositfiles доступ к вашей учетной записи?")) );
     }
 
     @Test
     public void testVk() {
         // получаем уникальный идентификаторы открытых окон
         vars.put("window_handles", driver.getWindowHandles());
-        WebElement vk = driver.findElement(By.xpath("//a[contains(@class, \'button-vkontakte\')]"));
+        WebElement vk = driver.findElement(By.xpath("//a[contains(@class, 'button-vkontakte')]"));
         ((JavascriptExecutor)driver).executeScript("arguments[0].click();", vk);
         changeWindow(2000);
         assertEquals("ВКонтакте", driver.findElement(By.xpath("//*[@id=\"oauth_wrap_content\"]/div[2]/div/b")).getText() );
@@ -81,7 +83,7 @@ public class RegistrationViaSocialNetworksTest {
     public void testGoogle() {
         // получаем уникальный идентификаторы открытых окон
         vars.put("window_handles", driver.getWindowHandles());
-        WebElement google = driver.findElement(By.xpath("//a[contains(@class, \'button-google\')]"));
+        WebElement google = driver.findElement(By.xpath("//a[contains(@class, 'button-google')]"));
         ((JavascriptExecutor)driver).executeScript("arguments[0].click();", google);
         changeWindow(2000);
         assertThat(driver.getTitle(), is("Вход – Google Аккаунты"));

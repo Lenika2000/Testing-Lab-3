@@ -43,11 +43,9 @@ public class FileTests {
 
     public void choseFile() {
         // переходим во все файлы
-        WebElement allFiles = driver.findElement(By.xpath("//*[@id=\"df_share\"]/div[1]/ul/li[4]/a"));
-        jse.executeScript("arguments[0].click()", allFiles);
+        driver.findElement(By.xpath("//*[@id=\"df_share\"]/div[1]/ul/li[4]/a")).click();
         waitUntilNotificationDisappears();
-        WebElement file = driver.findElement(By.xpath("//*[@id=\"tbl_filelist\"]/tbody/tr[1]/td[1]/input"));
-        jse.executeScript("arguments[0].click()", file);
+        driver.findElement(By.xpath("//*[@id=\"tbl_filelist\"]/tbody/tr[1]/td[1]/input")).click();
     }
 
     public void waitUntilNotificationDisappears() {
@@ -67,8 +65,7 @@ public class FileTests {
         renameInput.sendKeys(Keys.DELETE);
         renameInput.sendKeys(init.getProperty("newFileName"));
         // Клик Готово
-        WebElement renameBtn = driver.findElement(By.xpath("//*[@id=\"depositbox\"]/div[1]/div[2]/div/div"));
-        jse.executeScript("arguments[0].click()", renameBtn);
+        driver.findElement(By.xpath("//*[@id=\"depositbox\"]/div[1]/div[2]/div/div")).click();
 
         waitUntilNotificationDisappears();
 
@@ -81,6 +78,7 @@ public class FileTests {
     public void removeFileTest() {
         choseFile();
         String fileName = driver.findElement(By.xpath("//td[contains(@class, 'filename_source')]/div/span/a")).getText();
+        int filesQuality = driver.findElements(By.xpath("//*[@id=\"tbl_filelist\"]/tbody/tr")).size();
         // Удалить
         WebElement removeBtn = driver.findElement(By.xpath("//*[@id=\"df_share\"]/div[2]/div[1]/a[7]"));
         jse.executeScript("arguments[0].click()", removeBtn);
@@ -88,18 +86,17 @@ public class FileTests {
         driver.findElement(By.xpath("//*[@id=\"depositbox\"]/div[1]/div[2]/div/div/input[1]")).click();
 
         waitUntilNotificationDisappears();
-
+        int newFilesQuality = driver.findElements(By.xpath("//*[@id=\"tbl_filelist\"]/tbody/tr")).size();
         List<WebElement> allElements = driver.findElements(By.xpath("//*[@id=\"tbl_filelist\"]/tbody/tr"));
         boolean result = allElements.stream().noneMatch(tr -> tr.findElement(By.xpath("./td[contains(@class, 'filename_source')]/div/span/a")).getText().equals(fileName));
-        assertTrue(result);
+        assertTrue(result || (filesQuality- newFilesQuality == 1));
     }
 
     @Test
     public void getFilePropertiesTest() {
         choseFile();
         // Свойства
-        WebElement showPropertiesBtn = driver.findElement(By.xpath("//*[@id=\"df_share\"]/div[2]/div[1]/a[10]"));
-        jse.executeScript("arguments[0].click()", showPropertiesBtn);
+        driver.findElement(By.xpath("//*[@id=\"df_share\"]/div[2]/div[1]/a[10]")).click();
         assertThat(driver.findElement(By.xpath("//*[@id=\"depositbox\"]/div[1]/div[1]/span")).getText(), is("Свойства файла"));
         driver.findElement(By.xpath("//*[@id=\"depositbox\"]/div[1]/div[2]/div/div[7]")).click();
     }
@@ -109,14 +106,11 @@ public class FileTests {
         choseFile();
         String fileName = driver.findElement(By.xpath("//td[contains(@class, 'filename_source')]/div/span/a")).getText();
         // Перемещение
-        WebElement moveBtn = driver.findElement(By.xpath("//*[@id=\"df_share\"]/div[2]/div[1]/a[5]"));
-        jse.executeScript("arguments[0].click()", moveBtn);
+        driver.findElement(By.xpath("//*[@id=\"df_share\"]/div[2]/div[1]/a[5]")).click();
         // Выбор папки, в которую перемещаем
-        WebElement selectedFolder = driver.findElement(By.xpath("//*[@id=\"depositbox\"]/div[1]/div[2]/div/div/ul/li[2]/ul/li[1]/a"));
-        jse.executeScript("arguments[0].click()", selectedFolder);
+        driver.findElement(By.xpath("//*[@id=\"depositbox\"]/div[1]/div[2]/div/div/ul/li[2]/ul/li[1]/a")).click();
         // Перемещение
-        WebElement moveDialogBtn = driver.findElement(By.xpath("//*[@id=\"depositbox\"]/div[1]/div[2]/div/input"));
-        jse.executeScript("arguments[0].click()", moveDialogBtn);
+        driver.findElement(By.xpath("//*[@id=\"depositbox\"]/div[1]/div[2]/div/input")).click();
         waitUntilNotificationDisappears();
         // переход в папку, куда осуществлялось перемещение
         driver.findElement(By.xpath("//*[@id=\"df_share\"]/div[1]/ul/li[2]/ul/li[1]/a")).click();
@@ -141,8 +135,7 @@ public class FileTests {
         driver.findElement(By.xpath("//*[@id=\"depositbox\"]/div[1]/div[2]/div/input")).click();
         driver.findElement(By.xpath("//*[@id=\"depositbox\"]/div[1]/div[2]/div/input")).sendKeys(init.getProperty("newGroupFolderName"));
         // готово
-        WebElement readyBtn = driver.findElement(By.xpath("//*[@id=\"depositbox\"]/div[1]/div[2]/div/div"));
-        jse.executeScript("arguments[0].click()", readyBtn);
+        driver.findElement(By.xpath("//*[@id=\"depositbox\"]/div[1]/div[2]/div/div")).click();
         waitUntilNotificationDisappears();
         // Поиск созданной папки
         List<WebElement> folders = driver.findElements(By.xpath("//*[@id=\"df_share\"]/div[1]/ul/li[2]/ul/li"));
